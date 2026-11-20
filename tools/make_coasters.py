@@ -187,6 +187,27 @@ def set_of_four(md, outdir, city, state, mm_per_m=1 / 46.0, size=100.0):
         emit(outdir, f"set4_{'%d' % (j * 2 + i + 1)}_{tag}", size, engrave.union(decor), texts, cut, lines, window, decor)
 
 
+def sheet(outdir, name, files, cols, size=100.0, gap=4.0):
+    """Lay several finished coaster files out on one sheet (keeps the layer colours)."""
+    import re
+    rows = -(-len(files) // cols)
+    w, h = cols * size + (cols - 1) * gap, rows * size + (rows - 1) * gap
+    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}mm" height="{h}mm" viewBox="0 0 {w} {h}">']
+    for layer in ("engrave", "score", "cut"):       # group by operation so the cut runs last
+        parts.append(f'<g id="{layer}">')
+        for n, f in enumerate(files):
+            body = open(f"{outdir}/{f}").read()
+            m = re.search(rf'<g id="{layer}"([^>]*)>(.*?)</g>', body, re.S)
+            if m:
+                x, y = (n % cols) * (size + gap), (n // cols) * (size + gap)
+                parts.append(f'<g transform="translate({x},{y})"{m.group(1)}>{m.group(2)}</g>')
+        parts.append("</g>")
+    parts.append("</svg>")
+    path = f"{outdir}/{name}"
+    open(path, "w").write("\n".join(parts))
+    print(f"{os.path.relpath(path, ROOT):55s} {os.path.getsize(path) / 1024:7.0f} kB  ({w:.0f} x {h:.0f} mm)")
+
+
 if __name__ == "__main__":
     out = os.path.join(ROOT, "coasters", "kearney")
     os.makedirs(out, exist_ok=True)
@@ -194,3 +215,7 @@ if __name__ == "__main__":
     round_coaster(md, out, "KEARNEY", "NEBRASKA", "")
     square_coaster(md, out, "KEARNEY", "NEBRASKA", "40.70° N  99.08° W")
     set_of_four(md, out, "KEARNEY", "NEBRASKA")
+    for kind in ("engrave", "score"):
+        four = [f"set4_{n}_{t}_{kind}.svg" for n, t in ((1, "NW"), (2, "NE"), (3, "SW"), (4, "SE"))]
+        sheet(out, f"sheet_set4_{kind}.svg", four, cols=2)                       # 204 x 204 mm, fits a 12 x 12 in sheet
+        sheet(out, f"sheet_all6_{kind}.svg", four[:2] + [f"round_{kind}.svg"] + four[2:] + [f"square_{kind}.svg"], cols=3)  # 308 x 204 mm
