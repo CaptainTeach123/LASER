@@ -23,7 +23,13 @@ figure{margin:0;text-align:center} figcaption{margin-top:14px;letter-spacing:.08
 .c svg #cut{display:none}
 .grid{display:grid;grid-template-columns:420px 420px;gap:5px}
 `;
+const logoRow = d => `<div class="row">
+    <figure>${coaster(d + '/round_engrave.svg', 1)}<figcaption>ROUND · LOGO ENGRAVED</figcaption></figure>
+    <figure>${coaster(d + '/square_engrave.svg')}<figcaption>SQUARE · LOGO ENGRAVED</figcaption></figure>
+    <figure>${coaster(d + '/round_inverted.svg', 1)}<figcaption>ROUND · BACKGROUND ENGRAVED</figcaption></figure>
+    <figure>${coaster(d + '/square_inverted.svg')}<figcaption>SQUARE · BACKGROUND ENGRAVED</figcaption></figure></div>`;
 const pages = {
+  'baylor_coasters.png': logoRow('baylor'),
   'dolphins_coasters.png': `<div class="row">
     <figure>${coaster('dolphins/round_skyline.svg', 1)}<figcaption>ROUND · THREE-TONE ENGRAVE</figcaption></figure>
     <figure>${coaster('dolphins/square_skyline.svg')}<figcaption>SQUARE · THREE-TONE ENGRAVE</figcaption></figure></div>`,

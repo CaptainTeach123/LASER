@@ -26,6 +26,14 @@ Regenerate, or trace a different logo: `python3 tools/make_logo_coasters.py [log
 
 The Lopers logo is a University of Nebraska at Kearney trademark: fine for personal gifts, but selling items with it needs a licence from the university.
 
+## Baylor Bears coasters
+
+In `coasters/baylor/`, each 100 x 100 mm: the interlocking BU mark with a "BAYLOR BEARS" caption, in the same
+four versions as the Lopers set (`round`/`square`, `_engrave`/`_inverted`). The mark comes from
+`assets/baylor_logo.svg` (Wikimedia Commons). It is a Baylor University trademark: personal gifts only.
+
+Regenerate with `python3 tools/make_logo_coasters.py assets/baylor_logo.png baylor "BAYLOR BEARS"`.
+
 ## Miami Dolphins + skyline coasters
 
 In `coasters/dolphins/`: `round_skyline.svg` and `square_skyline.svg`, each 100 x 100 mm.

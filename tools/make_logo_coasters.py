@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Trace a logo PNG to vectors and build laser-ready logo coasters.
 
-Usage: make_logo_coasters.py [logo.png] [output-name]
+Usage: make_logo_coasters.py [logo.png] [output-name] [caption text]
 Layers: black fill = ENGRAVE, red stroke = CUT (same convention as make_coasters.py).
 """
 import math, os, sys
@@ -10,6 +10,7 @@ import potrace
 from scipy import ndimage
 from PIL import Image
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SPECK = 0.0015  # detached ink smaller than this fraction of the image is removed
 UP = 6  # upscale factor before thresholding, for smoother traced edges
@@ -74,7 +75,7 @@ def write(path, size, engrave_d, cut):
     print(f"{os.path.relpath(path, ROOT):50s} {os.path.getsize(path) / 1024:6.0f} kB")
 
 
-def main(png, name, size=100.0):
+def main(png, name, caption=None, size=100.0):
     out = os.path.join(ROOT, "coasters", name)
     os.makedirs(out, exist_ok=True)
     curves, w, h = trace(png)
@@ -83,25 +84,33 @@ def main(png, name, size=100.0):
     cut_square = f'<rect x="0" y="0" width="{size}" height="{size}" rx="8" ry="8"/>'
     ring = circle_d(c, c, c - 2.6) + circle_d(c, c, c - 3.3)
     frame = rrect_d(3, 3, size - 6, size - 6, 5.5) + rrect_d(3.7, 3.7, size - 7.4, size - 7.4, 4.8)
-    # the largest box of the logo's proportions that fits inside a circle of radius r
-    r = c - 7.5
-    ang = math.atan2(h, w)
-    fit_w, fit_h = 2 * r * math.cos(ang), 2 * r * math.sin(ang)
+    disc, panel = circle_d(c, c, c - 4.3), rrect_d(4.8, 4.8, size - 9.6, size - 9.6, 3.7)
+
+    if caption:                                     # logo above, caption below
+        from make_coasters import text_path
+        logo_r = logo_d(curves, w, h, c, c - 7.5, 62, 56)
+        logo_s = logo_d(curves, w, h, c, c - 6.5, 76, 62)
+        text_r = text_path(caption, c, c + 34.2, 3.6, 0.22)[0]
+        text_s = text_path(caption, c, size - 9.6, 4.4, 0.3)[0]
+        logo_ri, logo_si = logo_r, logo_s
+    else:                                           # logo alone, as large as fits
+        ang = math.atan2(h, w)
+        r, r2 = c - 7.5, c - 8.5
+        logo_r = logo_d(curves, w, h, c, c, 2 * r * math.cos(ang), 2 * r * math.sin(ang))
+        logo_ri = logo_d(curves, w, h, c, c, 2 * r2 * math.cos(ang), 2 * r2 * math.sin(ang))
+        logo_s = logo_d(curves, w, h, c, c, size - 18, size - 18)
+        logo_si = logo_d(curves, w, h, c, c, size - 22, size - 22)
+        text_r = text_s = ""
 
     # logo engraved (dark logo on light wood)
-    write(f"{out}/round_engrave.svg", size, ring + logo_d(curves, w, h, c, c, fit_w, fit_h), cut_round)
-    write(f"{out}/square_engrave.svg", size, frame + logo_d(curves, w, h, c, c, size - 18, size - 18), cut_square)
-    # background engraved, logo left as bare wood (even-odd fill knocks the logo out of the disc)
-    r2 = c - 5.5
-    a2 = math.atan2(h, w)
-    write(f"{out}/round_inverted.svg", size,
-          ring + circle_d(c, c, c - 4.3) + logo_d(curves, w, h, c, c, 2 * (r2 - 3) * math.cos(a2), 2 * (r2 - 3) * math.sin(a2)),
-          cut_round)
-    write(f"{out}/square_inverted.svg", size,
-          frame + rrect_d(4.8, 4.8, size - 9.6, size - 9.6, 3.7) + logo_d(curves, w, h, c, c, size - 22, size - 22),
-          cut_square)
+    write(f"{out}/round_engrave.svg", size, ring + logo_r + text_r, cut_round)
+    write(f"{out}/square_engrave.svg", size, frame + logo_s + text_s, cut_square)
+    # background engraved, logo left as bare wood (even-odd fill knocks the logo out of the panel)
+    write(f"{out}/round_inverted.svg", size, ring + disc + logo_ri + text_r, cut_round)
+    write(f"{out}/square_inverted.svg", size, frame + panel + logo_si + text_s, cut_square)
 
 
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "assets", "lopers_logo.png"),
-         sys.argv[2] if len(sys.argv) > 2 else "lopers")
+         sys.argv[2] if len(sys.argv) > 2 else "lopers",
+         sys.argv[3] if len(sys.argv) > 3 else None)
