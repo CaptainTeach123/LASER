@@ -26,6 +26,24 @@ Regenerate, or trace a different logo: `python3 tools/make_logo_coasters.py [log
 
 The Lopers logo is a University of Nebraska at Kearney trademark: fine for personal gifts, but selling items with it needs a licence from the university.
 
+## Miami Dolphins + skyline coasters
+
+In `coasters/dolphins/`: `round_skyline.svg` and `square_skyline.svg`, each 100 x 100 mm.
+
+The logo's three colours are kept as three separate engrave layers so each can get its own power:
+
+| Colour in file | Suggested tone |
+| --- | --- |
+| Navy `#005778` | Darkest (highest engrave power) |
+| Orange `#fc4c02` | Medium |
+| Aqua `#008e97` | Lightest |
+| Black | Skyline, MIAMI text and border: dark |
+
+Giving all layers the same setting also works; the dolphin then burns as a single-tone silhouette.
+The skyline is a stylised drawing, not a to-scale view. The logo is an NFL / Miami Dolphins trademark: personal gifts only.
+
+Regenerate with `python3 tools/make_dolphins_coasters.py`.
+
 ### Layers (by colour)
 
 | Colour | Operation |

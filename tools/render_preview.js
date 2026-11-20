@@ -16,11 +16,17 @@ figure{margin:0;text-align:center} figcaption{margin-top:14px;letter-spacing:.08
 .c.r{border-radius:50%}
 .c svg{width:100%;height:100%;display:block}
 .c svg #engrave path{fill:#4a2a10}
+[id=engrave-navy] path{fill:#3d210b}
+[id=engrave-orange] path{fill:#7a4a1f}
+[id=engrave-aqua] path{fill:#b08552}
 .c svg #score path{stroke:#5a3414;stroke-width:.22}
 .c svg #cut{display:none}
 .grid{display:grid;grid-template-columns:420px 420px;gap:5px}
 `;
 const pages = {
+  'dolphins_coasters.png': `<div class="row">
+    <figure>${coaster('dolphins/round_skyline.svg', 1)}<figcaption>ROUND · THREE-TONE ENGRAVE</figcaption></figure>
+    <figure>${coaster('dolphins/square_skyline.svg')}<figcaption>SQUARE · THREE-TONE ENGRAVE</figcaption></figure></div>`,
   'lopers_coasters.png': `<div class="row">
     <figure>${coaster('lopers/round_engrave.svg', 1)}<figcaption>ROUND · LOGO ENGRAVED</figcaption></figure>
     <figure>${coaster('lopers/square_engrave.svg')}<figcaption>SQUARE · LOGO ENGRAVED</figcaption></figure>
