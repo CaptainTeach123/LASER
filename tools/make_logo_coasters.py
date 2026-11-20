@@ -7,9 +7,11 @@ Layers: black fill = ENGRAVE, red stroke = CUT (same convention as make_coasters
 import math, os, sys
 import numpy as np
 import potrace
+from scipy import ndimage
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SPECK = 0.0015  # detached ink smaller than this fraction of the image is removed
 UP = 6  # upscale factor before thresholding, for smoother traced edges
 
 
@@ -21,6 +23,16 @@ def trace(png):
     ink = (a[..., 3] / 255.0) * (1 - lum / 255.0)          # opaque and dark = ink
     big = Image.fromarray((ink * 255).astype("uint8")).resize((im.width * UP, im.height * UP), Image.BICUBIC)
     mask = np.asarray(big) > 255 * 0.28
+    # drop tiny marks floating in the open background (the TM symbols); small islands
+    # inside the artwork, such as the centres of letters, are kept
+    bg, _ = ndimage.label(~np.pad(mask, 1))
+    outside = (bg == bg[0, 0])[1:-1, 1:-1]
+    lab, n = ndimage.label(mask)
+    areas = ndimage.sum(mask, lab, range(1, n + 1))
+    for i, (area, sl) in enumerate(zip(areas, ndimage.find_objects(lab)), 1):
+        if area < SPECK * mask.size and (ndimage.binary_dilation(lab == i, iterations=2) & outside).any():
+            print(f"  removed detached mark at x={sl[1].start // UP}, y={sl[0].start // UP} ({area / UP / UP:.0f} px)")
+            mask[lab == i] = False
     curves = []
     for c in potrace.Bitmap(~mask).trace(turdsize=UP * UP, alphamax=1.0, opttolerance=0.3):
         segs = [("M", [c.start_point])]

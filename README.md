@@ -15,14 +15,14 @@ Ready-to-import SVGs in `coasters/kearney/`, each 100 x 100 mm (about 4 in). Pre
 
 ## Lopers logo coasters
 
-In `coasters/lopers/`, each 100 x 100 mm, traced from `assets/lopers_logo.png`.
+In `coasters/lopers/`, each 100 x 100 mm, traced from `assets/lopers_logo.png` (TM marks removed).
 
 | File | What it is |
 | --- | --- |
 | `round_engrave.svg`, `square_engrave.svg` | Logo engraved dark on bare wood (quick) |
 | `round_inverted.svg`, `square_inverted.svg` | Background engraved, logo left as bare wood (bolder, much longer engrave) |
 
-Regenerate, or trace a different logo: `python3 tools/make_logo_coasters.py [logo.png] [output-name]` (needs `pip install potracer pillow numpy`).
+Regenerate, or trace a different logo: `python3 tools/make_logo_coasters.py [logo.png] [output-name]` (needs `pip install potracer pillow numpy scipy`).
 
 The Lopers logo is a University of Nebraska at Kearney trademark: fine for personal gifts, but selling items with it needs a licence from the university.
 
