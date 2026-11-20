@@ -2,7 +2,7 @@
 const fs = require('fs'), path = require('path');
 const { chromium } = require('playwright');
 const root = path.join(__dirname, '..'), dir = path.join(root, 'coasters/kearney');
-const svg = n => fs.readFileSync(path.join(dir, n), 'utf8');
+const svg = n => fs.readFileSync(path.join(n.includes('/') ? path.join(root, 'coasters') : dir, n), 'utf8');
 const coaster = (n, round) => `<div class="c ${round ? 'r' : ''}">${svg(n)}</div>`;
 const css = `
 body{margin:0;background:#2b2f33;font:600 15px Inter,sans-serif;color:#cfd3d6}
@@ -21,6 +21,11 @@ figure{margin:0;text-align:center} figcaption{margin-top:14px;letter-spacing:.08
 .grid{display:grid;grid-template-columns:420px 420px;gap:5px}
 `;
 const pages = {
+  'lopers_coasters.png': `<div class="row">
+    <figure>${coaster('lopers/round_engrave.svg', 1)}<figcaption>ROUND · LOGO ENGRAVED</figcaption></figure>
+    <figure>${coaster('lopers/square_engrave.svg')}<figcaption>SQUARE · LOGO ENGRAVED</figcaption></figure>
+    <figure>${coaster('lopers/round_inverted.svg', 1)}<figcaption>ROUND · BACKGROUND ENGRAVED</figcaption></figure>
+    <figure>${coaster('lopers/square_inverted.svg')}<figcaption>SQUARE · BACKGROUND ENGRAVED</figcaption></figure></div>`,
   'kearney_single_coasters.png': `<div class="row">
     <figure>${coaster('round_engrave.svg', 1)}<figcaption>ROUND · ENGRAVED</figcaption></figure>
     <figure>${coaster('square_engrave.svg')}<figcaption>SQUARE · ENGRAVED</figcaption></figure>
@@ -30,7 +35,7 @@ const pages = {
 };
 (async () => {
   const b = await chromium.launch();
-  const p = await b.newPage({ deviceScaleFactor: 2, viewport: { width: 1500, height: 1000 } });
+  const p = await b.newPage({ deviceScaleFactor: 2, viewport: { width: 2000, height: 1000 } });
   for (const [name, body] of Object.entries(pages)) {
     await p.setContent(`<style>${css}</style><div class="wrap">${body}</div>`);
     await (await p.$('.wrap')).screenshot({ path: path.join(root, 'previews', name) });
