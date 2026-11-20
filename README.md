@@ -34,6 +34,10 @@ four versions as the Lopers set (`round`/`square`, `_engrave`/`_inverted`). The 
 
 Regenerate with `python3 tools/make_logo_coasters.py assets/baylor_logo.png baylor "BAYLOR BEARS"`.
 
+`round_waco_map.svg` and `square_waco_map.svg` put the BU mark over a street map of downtown Waco (Brazos River,
+I-35, the downtown grid and the Baylor campus area), from OpenStreetMap data. Regenerate with
+`python3 tools/make_baylor_waco.py`.
+
 ## Miami Dolphins + skyline coasters
 
 In `coasters/dolphins/`: `round_skyline.svg` and `square_skyline.svg`, each 100 x 100 mm.
@@ -60,7 +64,17 @@ Regenerate with `python3 tools/make_dolphins_coasters.py`.
 | Blue line (score files only) | Score |
 | Red line | Cut (the coaster outline) |
 
-In xTool Studio: import the SVG, select the black shapes and set them to Engrave, the red outline to Cut
+Getting a file into xTool Studio:
+
+1. Download the files to the computer that runs xTool Studio (on GitHub: Code > Download ZIP, then unzip).
+2. Open xTool Studio, connect the X1 and start a new project.
+3. Import the `.svg` (the Image / import button on the left toolbar, or drag the file onto the canvas).
+4. Check the size reads 100 x 100 mm. If not, lock the aspect ratio and type 100.
+5. Click a black shape and set it to Engrave; click the red outline and set it to Cut (blue lines: Score).
+   Shapes of one colour can be selected together and given one setting.
+6. Choose the material so Studio fills in power and speed, place the design on the camera view, then Process.
+
+In short: import the SVG, select the black shapes and set them to Engrave, the red outline to Cut
 (and blue to Score). Engrave first, cut last. Check the imported size is 100 mm; if not, scale with the aspect ratio locked.
 
 For pre-made blanks (slate, cork, bamboo rounds), delete the red outline and centre the artwork on the blank.

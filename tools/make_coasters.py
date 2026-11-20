@@ -61,7 +61,16 @@ class MapData:
             [LineString(P(g)) for g in self.raw["water_outer"]]))])
         inner = unary_union([p.buffer(0) for p in polygonize(unary_union(
             [LineString(P(g)) for g in self.raw["water_inner"]]))])
-        water = outer.difference(inner)
+        # Big rivers are mapped as outlines that run past the edge of the downloaded data and so
+        # never close. Close them against a frame around the window and keep the faces that the
+        # river's centreline runs along, provided the face is channel-shaped (under 8 mm mean
+        # width), so land the river merely borders is never flooded.
+        frame = box(*window.bounds).buffer(3, join_style=2)
+        rivers = unary_union([LineString(P(g)) for cls, g in self.raw["waterlines"] if cls == "river"] or [LineString()])
+        banks = unary_union([LineString(P(g)) for g in self.raw["water_outer"]]).intersection(frame)
+        faces = [f for f in polygonize(unary_union([banks, frame.boundary]))
+                 if (lambda L: L > 2.0 and f.area / L < 8.0)(f.intersection(rivers).length)]
+        water = unary_union([outer, *faces]).difference(inner)
         shapes.append(water)
         return unary_union(shapes).intersection(window), lines
 

@@ -29,6 +29,9 @@ const logoRow = d => `<div class="row">
     <figure>${coaster(d + '/round_inverted.svg', 1)}<figcaption>ROUND · BACKGROUND ENGRAVED</figcaption></figure>
     <figure>${coaster(d + '/square_inverted.svg')}<figcaption>SQUARE · BACKGROUND ENGRAVED</figcaption></figure></div>`;
 const pages = {
+  'baylor_waco_map.png': `<div class="row">
+    <figure>${coaster('baylor/round_waco_map.svg', 1)}<figcaption>ROUND · DOWNTOWN WACO MAP</figcaption></figure>
+    <figure>${coaster('baylor/square_waco_map.svg')}<figcaption>SQUARE · DOWNTOWN WACO MAP</figcaption></figure></div>`,
   'baylor_coasters.png': logoRow('baylor'),
   'dolphins_coasters.png': `<div class="row">
     <figure>${coaster('dolphins/round_skyline.svg', 1)}<figcaption>ROUND · THREE-TONE ENGRAVE</figcaption></figure>
