@@ -100,3 +100,7 @@ Size, map centre, zoom, line widths and text are parameters in `tools/make_coast
 `tools/extract_osm.py` rebuilds `data/kearney_osm.json.gz` from raw OpenStreetMap tiles.
 
 Map data (c) OpenStreetMap contributors, ODbL.
+
+## Modular gingerbread village
+
+Concept render and kit description in `gingerbread/` (no cut files yet).
